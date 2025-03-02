@@ -1,0 +1,67 @@
+{
+    "city": [
+        "id",
+        "name"
+    ],
+    "tbl_cycletime": [
+        "cycle_id",
+        "machine_id",
+        "operation_id",
+        "dye_id",
+        "cycletime"
+    ],
+    "tbl_cycletime_old": [
+        "cycle_id",
+        "machine_id",
+        "operation_id",
+        "dye_id",
+        "cycletime"
+    ],
+    "tbl_daily_login_register": [
+        "daily_login_register_id",
+        "login_id",
+        "currentdate",
+        "shift_details",
+        "logged_in_time",
+        "logged_out_time"
+    ],
+    "tbl_efficiency": [
+        "id",
+        "estimated_target",
+        "revised_target",
+        "achieved_target",
+        "interruption_recorded",
+        "daily_login_register_id",
+        "operation_id",
+        "dye_id",
+        "cycle_time",
+        "machine_id"
+    ],
+    "tbl_interruption_details": [
+        "interupt_id",
+        "daily_login_register_id",
+        "daily_op_id",
+        "machine_id",
+        "operation_id",
+        "dye_id",
+        "interruption_type",
+        "start_time",
+        "end_time",
+        "reason",
+        "tool_type"
+    ],
+    "tbl_interruptions_master": [
+        "interruption_id",
+        "interruption_title",
+        "interruption_description",
+        "interruptions_colors"
+    ],
+    "tbl_machine_master": [
+        "machine_id",
+        "Module",
+        "machine_name",
+        "Operations",
+        "purchase_date",
+        "vendor_name"
+    ]
+}

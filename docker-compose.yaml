@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  flask-app:
+    build: .
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+      - ollama
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - MYSQL_PASSWORD=admin_password
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - .:/app
+    restart: always
+    networks:
+      - mynetwork  # Add the flask-app service to the custom network
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "my_db1"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork  # Add the mysql service to the custom network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh
+    pull_policy: always
+    tty: true
+    restart: always
+    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
+    command: ["ollama", "run", "llama3.2"]
+    networks:
+      - mynetwork  # Add the ollama service to the custom network
+
+volumes:
+  mysql_data:
+
+networks:
+  mynetwork:
+    driver: bridge  # Specify the network driver (default is 'bridge')

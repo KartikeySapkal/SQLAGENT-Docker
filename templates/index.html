@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SQL Query Generator</h1>
+            <p>Ask questions about your database in natural language</p>
+        </header>
+
+        <main>
+            <section class="query-section">
+                <form id="prompt-form">
+                    <div class="input-group">
+                        <label for="prompt">Enter your request:</label>
+                        <input type="text" id="prompt" name="prompt" placeholder="e.g., Get total interruptions by machine name" required>
+                        <button type="submit">Generate Query</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="result-section">
+                <div class="query-container">
+                    <h2>Generated SQL Query</h2>
+                    <div class="query-box">
+                        <pre id="sql-query">-- Your SQL query will appear here</pre>
+                        <button id="execute-btn" disabled>Execute Query</button>
+                        <button id="copy-btn" disabled>Copy Query</button>
+                    </div>
+                </div>
+
+                <div class="results-container">
+                    <h2>Query Results</h2>
+                    <div id="loading" class="hidden">Executing query...</div>
+                    <div id="results-box">
+                        <table id="results-table" class="hidden">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                        <div id="message-box"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+<!--        <footer>-->
+<!--        </footer>-->
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
