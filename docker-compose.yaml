@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   flask-app:
     build: .
@@ -18,41 +16,43 @@ services:
       - .:/app
     restart: always
     networks:
-      - mynetwork  # Add the flask-app service to the custom network
+      - mynetwork
 
   mysql:
     image: mysql:8.0
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "my_db1"
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: my_db1
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./my_db1_dump.sql:/docker-entrypoint-initdb.d/my_db1_dump.sql  # Auto-import DB
     networks:
-      - mynetwork  # Add the mysql service to the custom network
+      - mynetwork
 
   ollama:
-    image: ollama/ollama:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama  # Using a custom Dockerfile for Ollama
     container_name: ollama
     ports:
       - "11434:11434"
     volumes:
-      - ./ollama/ollama:/root/.ollama
-      - ./entrypoint.sh:/entrypoint.sh
-    pull_policy: always
+      - ollama_data:/root/.ollama  # Persistent Ollama model storage
+      - ./entrypoint.sh:/entrypoint.sh  # Ensure proper entrypoint script
     tty: true
     restart: always
-    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
-    command: ["ollama", "run", "llama3.2"]
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
     networks:
-      - mynetwork  # Add the ollama service to the custom network
+      - mynetwork
 
 volumes:
   mysql_data:
+  ollama_data:  # Ensure persistent Ollama storage
 
 networks:
   mynetwork:
-    driver: bridge  # Specify the network driver (default is 'bridge')
+    driver: bridge

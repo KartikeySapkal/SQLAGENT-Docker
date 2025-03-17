@@ -1,0 +1,10 @@
+FROM ollama/ollama:latest
+
+# Set working directory
+WORKDIR /root
+
+# Ensure Ollama is updated before running
+RUN ollama serve & sleep 5 && ollama pull llama3.2
+
+# Default command
+CMD ["ollama", "serve"]

@@ -1,27 +1,10 @@
+from my_database.context_generator import SCHEMA_INFO
 import json
-
-import mysql.connector
-from dotenv import load_dotenv
-from flask import Flask, render_template, request, jsonify
 from ollama import Client
-# from my_database import db_connector
 from my_database.db_connector import get_db_connection
-# from utility.query_utility import generate_sql_query, execute_query
+import mysql.connector
 
-# Load environment variables
-load_dotenv()
-
-# Initialize Flask app
-app = Flask(__name__)
-
-# Initialize Ollama client
 client = Client(host='http://ollama:11434')
-# client = Client(host='http://localhost:11434')
-
-# Load schema JSON file
-with open("my_database/schema_info.json", "r") as file:
-    SCHEMA_INFO = json.load(file)
-
 
 def generate_sql_query(user_prompt):
     """Generate a MySQL query using LLM with schema awareness."""
@@ -51,6 +34,7 @@ def generate_sql_query(user_prompt):
     return response['message']['content'].strip()
 
 
+
 def execute_query(query):
     """Execute a MySQL query and return results."""
     results = []
@@ -78,37 +62,3 @@ def execute_query(query):
 
     return results, error
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/generate', methods=['POST'])
-def generate():
-    user_request = request.form.get('prompt', '')
-
-    try:
-        sql_query = generate_sql_query(user_request)
-        return jsonify({"status": "success", "query": sql_query})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
-
-@app.route('/execute', methods=['POST'])
-def execute():
-    query = request.form.get('query', '')
-
-    if not query:
-        return jsonify({"status": "error", "message": "No query provided"})
-
-    results, error = execute_query(query)
-
-    if error:
-        return jsonify({"status": "error", "message": error})
-
-    return jsonify({"status": "success", "results": results})
-
-
-if __name__ == "__main__":
-    app.run(debug=True, port= 5000)
