@@ -1,16 +1,13 @@
 #!/bin/bash
 
-# Start Ollama in the background.
-/bin/ollama serve &
-# Record Process ID.
-pid=$!
+echo "Starting Ollama..."
+ollama serve & sleep 5  # Start the server
 
-# Pause for Ollama to start.
-sleep 5
+# Ensure Llama3.2 model is downloaded once
+if [ ! -f "/root/.ollama/llama3.2" ]; then
+    echo "Downloading Llama3.2..."
+    ollama pull llama3.2
+fi
 
-echo "🔴 Retrieve LLAMA3.2 model..."
-ollama pull llama3.2
-echo "🟢 Done!"
-
-# Wait for Ollama process to finish.
-wait $pid
+echo "Ollama is ready!"
+tail -f /dev/null  # Keep container running
